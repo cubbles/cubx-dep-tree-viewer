@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dependency tree viewer example</title>
+
+    <script src="../../cubx.core.rte@2.1.0/webcomponents-lite/webcomponents-lite.js"></script>
+
+    <!-- include crc-loader webresource from base
+        1) Want to add a main script?
+        Add the following attribute: data-crc-main="js/main.js"
+    -->
+
+    <script src="../../cubx.core.rte@2.1.0/crc-loader/js/main.js" data-crcinit-loadcif="true"></script>
+
+</head>
+<body>
+<script>
+  // you can create a dependency tree by providing a list of root dependencies (as DepReference items) and a baseUrl as follows:
+
+  (function () {
+    'use strict';
+    document.body.addEventListener('crcReady', function () {
+        var depMgr = window.cubx.CRC.getDependencyMgr();
+        // define at least one root dependency
+        var rootDependencies = [
+          {
+            webpackageId: 'ckeditor@1.0.0-SNAPSHOT',
+            artifactId: 'cubx-ckeditor-full'
+          }
+        ];
+        // create list of DepReference items from given rootDependencies
+        var deps = depMgr._createDepReferenceListFromArtifactDependencies(rootDependencies);
+
+        // finally build rawDependency tree providing DepReference list and baseUrl
+        depMgr._buildRawDependencyTree(deps, 'https://cubbles.world/sandbox/')
+          .then(function (depTree) {
+            console.log(depTree);
+            // Note: Created depTree is an instance of class DependencyTree located in crc/modules/dependencyTree in cubx.core.rte
+          });
+    });
+  })();
+</script>
+</body>
+</html>
