@@ -8,9 +8,15 @@
     "name": "Philipp Wagner",
     "email": "philipp.wagner@incowia.com"
   },
+  "contributors": [
+    {
+      "name": "Edwin Gamboa",
+      "email": "edwingamboa355@gmail.com"
+    }
+  ],
   "license": "MIT",
-  "keywords": [ ],
-  "man": [ ],
+  "keywords": [],
+  "man": [],
   "artifacts": {
     "apps": [
       {
@@ -36,8 +42,48 @@
         ]
       }
     ],
-    "elementaryComponents": [ ],
-    "compoundComponents": [ ],
-    "utilities": [ ]
+    "elementaryComponents": [
+      {
+        "artifactId": "cubx-dep-tree-viewer",
+        "description": "Component to visualize the dependency tree of a component.",
+        "runnables": [
+          {
+            "name": "demo",
+            "path": "/demo/index.html",
+            "description": "Demo app..."
+          },
+          {
+            "name": "docs",
+            "path": "/docs/index.html",
+            "description": "Show the interface of this component."
+          }
+        ],
+        "resources": [
+          "cubx-dep-tree-viewer.html"
+        ],
+        "dependencies": [
+          {
+            "webpackageId": "cubx.core.rte@2.1.0",
+            "artifactId": "cubxpolymer"
+          },
+          {
+            "webpackageId": "d3-4.4.0@1.0.0",
+            "artifactId": "d3"
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "depTree",
+            "description": "Dependency tree to be visualized",
+            "type": "object",
+            "direction": [
+              "input"
+            ]
+          }
+        ]
+      }
+    ],
+    "compoundComponents": [],
+    "utilities": []
   }
 }

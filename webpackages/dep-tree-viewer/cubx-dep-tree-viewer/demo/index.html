@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>&lt;cubx-dep-tree-viewer&gt; demo</title>
+
+    <script src="../../../cubx.core.rte@2.1.0/webcomponents-lite/webcomponents-lite.js"></script>
+    <script src="../../../cubx.core.rte@2.1.0/crc-loader/js/main.js" data-crcinit-loadcif="true"></script>
+
+</head>
+<body>
+<!--  Place cubbles components there. -->
+<cubx-dep-tree-viewer cubx-webpackage-id="this"></cubx-dep-tree-viewer>
+
+<script>
+    (function () {
+        'use strict';
+        document.body.addEventListener('cifReady', function () {
+            var depMgr = window.cubx.CRC.getDependencyMgr();
+            // define at least one root dependency
+            var rootDependencies = [
+                {
+                    webpackageId: 'com.incowia.cubx-webpackage-viewer@1.4.2',
+                    artifactId: 'cubx-webpackage-viewer'
+                }
+            ];
+            // create list of DepReference items from given rootDependencies
+            var deps = depMgr._createDepReferenceListFromArtifactDependencies(rootDependencies);
+
+            // finally build rawDependency tree providing DepReference list and baseUrl
+            depMgr._buildRawDependencyTree(deps, 'https://cubbles.world/sandbox/')
+                    .then(function (depTree) {
+                        document.querySelector('cubx-dep-tree-viewer').setDepTree(depTree);
+                    });
+        });
+    })();
+</script>
+
+</body>
+</html>
