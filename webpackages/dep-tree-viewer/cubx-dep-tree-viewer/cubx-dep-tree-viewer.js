@@ -38,28 +38,53 @@
     },
 
     /**
-     * Parse a DependencyTree to a list usable by d3
-     * @param tree
-     * @param depList
-     * @returns {*}
+     *  Observe the Cubbles-Component-Model: If value for slot 'deepTree' has changed ...
      */
-    _treeToList: function (tree, depList) {
-      var counter = depList.length;
-      depList.push({
-        id: counter,
-        parentId: tree.parent ? tree.parent.counter : '',
-        data: tree.data
-      });
-      if (tree.children.length === 0) {
-        return depList;
-      }
-      else {
-        for (var i = 0; i < tree.children.length; i++) {
-          tree.children[i].parent.counter = counter;
-          this.treeToList(tree.children[i], depList);
-        }
-        return depList;
-      }
+    modelDepTreeChanged: function (depTree) {
+      var self = this;
+      var svg = d3.select('svg')
+        .attr('width', '100%')
+        .attr('height', '800px');
+      var width = 600;
+      var height = 600;
+      var g = svg.append('g').attr('transform', 'translate(40,0)');
+
+      var tree = d3.cluster()
+        .size([height, width - 160]);
+
+      var root = d3.hierarchy(depTree._rootNodes[0]);
+      tree(root);
+      var link = g.selectAll('.link')
+        .data(root.descendants().slice(1))
+        .enter().append('path')
+        .attr('class', 'link ' + self.is)
+        .attr('d', function(d) {
+          return 'M' + d.y + ',' + d.x
+            + 'C' + (d.parent.y + 100) + ',' + d.x
+            + ' ' + (d.parent.y + 100) + ',' + d.parent.x
+            + ' ' + d.parent.y + ',' + d.parent.x;
+        });
+
+      var node = g.selectAll('.node')
+        .data(root.descendants())
+        .enter().append('g')
+        .attr('class', function(d) { return 'node' + (d.children ? ' node--internal' : ' node--leaf')  + ' ' + self.is; })
+        .attr('transform', function(d) {
+          return 'translate(' + d.y + ',' + d.x + ')';
+        });
+
+      node.append('circle')
+        .attr('class', self.is)
+        .attr('r', 2.5);
+
+      node.append('text')
+        .attr('class', self.is)
+        .attr('dy', 3)
+        .attr('x', function(d) { return d.children ? -8 : 8; })
+        .style('text-anchor', function(d) { return d.children ? 'end' : 'start'; })
+        .text(function(d) {
+          return d.data.data.artifactId;
+        });
     }
   });
 }());
