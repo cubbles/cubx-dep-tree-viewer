@@ -1,4 +1,4 @@
-/*global d3*/
+/* global d3 */
 (function () {
   'use strict';
   /**
@@ -41,35 +41,53 @@
      *  Observe the Cubbles-Component-Model: If value for slot 'deepTree' has changed ...
      */
     modelDepTreeChanged: function (depTree) {
+      var svg = document.querySelector('svg');
+      var treeHeight = (svg.scrollHeight / depTree._rootNodes.length) - this.getMargin().top;
+      var treeWidth = svg.scrollWidth - this.getMargin().right - this.getMargin().left;
+      for (var i = 0; i < depTree._rootNodes.length; i++) {
+        this._appendTree(depTree._rootNodes[i], i, treeHeight, treeWidth);
+      }
+    },
+
+    /**
+     * Append a new tree to the svg
+     * @param {object} treeRoot - Root node of the tree to be appened
+     * @param {number} index - Number indicating the index of the tree among the list of all trees
+     * to be appened
+     * @param {number} height - Height of tree
+     * @param {number} width - Width of the tree
+     * @private
+     */
+    _appendTree: function (treeRoot, index, height, width) {
       var self = this;
-      var svg = d3.select('svg')
-        .attr('width', '100%')
-        .attr('height', '800px');
-      var width = 600;
-      var height = 600;
-      var g = svg.append('g').attr('transform', 'translate(40,0)');
+      var svg = d3.select('svg');
+      var g = svg.append('g')
+        .attr('transform',
+          'translate(' + self.getMargin().left + ',' + (self.getMargin().top + index * height) + ')');
 
-      var tree = d3.cluster()
-        .size([height, width - 160]);
+      var tree = d3.tree()
+        .size([height, width]);
 
-      var root = d3.hierarchy(depTree._rootNodes[0]);
+      var root = d3.hierarchy(treeRoot);
       tree(root);
-      var link = g.selectAll('.link')
+      g.selectAll('.link')
         .data(root.descendants().slice(1))
         .enter().append('path')
         .attr('class', 'link ' + self.is)
-        .attr('d', function(d) {
-          return 'M' + d.y + ',' + d.x
-            + 'C' + (d.parent.y + 100) + ',' + d.x
-            + ' ' + (d.parent.y + 100) + ',' + d.parent.x
-            + ' ' + d.parent.y + ',' + d.parent.x;
+        .attr('d', function (d) {
+          return 'M' + d.y + ',' + d.x +
+            'C' + (d.parent.y + 100) + ',' + d.x +
+            ' ' + (d.parent.y + 100) + ',' + d.parent.x +
+            ' ' + d.parent.y + ',' + d.parent.x;
         });
 
       var node = g.selectAll('.node')
         .data(root.descendants())
         .enter().append('g')
-        .attr('class', function(d) { return 'node' + (d.children ? ' node--internal' : ' node--leaf')  + ' ' + self.is; })
-        .attr('transform', function(d) {
+        .attr('class', function (d) {
+          return 'node' + (d.children ? ' node--internal' : ' node--leaf') + ' ' + self.is;
+        })
+        .attr('transform', function (d) {
           return 'translate(' + d.y + ',' + d.x + ')';
         });
 
@@ -80,9 +98,9 @@
       node.append('text')
         .attr('class', self.is)
         .attr('dy', 3)
-        .attr('x', function(d) { return d.children ? -8 : 8; })
-        .style('text-anchor', function(d) { return d.children ? 'end' : 'start'; })
-        .text(function(d) {
+        .attr('x', function (d) { return d.children ? -8 : 8; })
+        .style('text-anchor', function (d) { return d.children ? 'end' : 'start'; })
+        .text(function (d) {
           return d.data.data.artifactId;
         });
     }
