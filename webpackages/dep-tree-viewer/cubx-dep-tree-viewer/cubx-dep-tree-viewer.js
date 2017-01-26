@@ -97,11 +97,20 @@
 
       node.append('text')
         .attr('class', self.is)
-        .attr('dy', 3)
-        .attr('x', function (d) { return d.children ? -8 : 8; })
-        .style('text-anchor', function (d) { return d.children ? 'end' : 'start'; })
+        .attr('dy', -3)
+        .attr('x', function (d) { return d.parent ? 8 : -8; })
+        .style('text-anchor', function (d) { return d.parent ? 'start' : 'end'; })
         .text(function (d) {
-          return d.data.data.artifactId;
+          return d.data.data.webpackageId;
+        });
+
+      node.append('text')
+        .attr('class', self.is)
+        .attr('dy', 9)
+        .attr('x', function (d) { return d.parent ? 8 : -8; })
+        .style('text-anchor', function (d) { return d.parent ? 'start' : 'end'; })
+        .text(function (d) {
+          return '\\' + d.data.data.artifactId;
         });
     }
   });
