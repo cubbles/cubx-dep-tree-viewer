@@ -114,6 +114,13 @@
       this._setZoomBehaviorToSvg(svg, g, initialTransform);
     },
 
+    /**
+     * Scale and center the tree within the svg that contains it
+     * @param {object} svg - D3 selection of the svg element
+     * @param {object} g - D3 selection of the svg group (<g>) that wraps the tree
+     * @returns {{x: number, y: number, scale: number}} - Final position and scale ratio
+     * @private
+     */
     _scaleAndCenterTree: function (svg, g) {
       var svgSize = {width: svg.node().width.baseVal.value, height: svg.node().height.baseVal.value};
       var gSize = {width: g.node().getBBox().width, height: g.node().getBBox().height};
