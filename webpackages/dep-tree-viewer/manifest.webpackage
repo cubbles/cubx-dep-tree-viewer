@@ -96,7 +96,7 @@
             "direction": [
               "input"
             ],
-            "value": "500px"
+            "value": "20em"
           },
           {
             "slotId": "margin",

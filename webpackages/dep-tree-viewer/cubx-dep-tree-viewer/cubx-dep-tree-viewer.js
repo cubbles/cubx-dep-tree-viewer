@@ -58,10 +58,14 @@
      */
     _appendTree: function (treeRoot, index) {
       var self = this;
-      var svg = d3.select('div')
+      var svg = d3.select('#viewerDiv')
+        .append('div')
+        .style('width', self.getWidth())
+        .style('height', self.getHeight())
+        .attr('class', 'svgContainer ' + self.is)
         .append('svg')
-        .attr('width', self.getWidth())
-        .attr('height', self.getHeight());
+        .attr('width', '100%')
+        .attr('height', '100%');
       var g = svg.append('g');
 
       var tree = d3.tree()
@@ -132,11 +136,6 @@
       var newY = svgSize.height / 2;
       g.transition()
         .attr('transform', 'translate(' + newX + ',' + newY + ') ' + 'scale(' + scaleRatio + ')');
-
-      console.log('svgSize: ' + JSON.stringify(svgSize));
-      console.log('gSize: ' + JSON.stringify(gSize));
-      console.log('translate(' + newX + ',' + newY + ') ' + 'scale(' + scaleRatio + ')');
-
       return {x: newX, y: newY, scale: scaleRatio};
     },
 
