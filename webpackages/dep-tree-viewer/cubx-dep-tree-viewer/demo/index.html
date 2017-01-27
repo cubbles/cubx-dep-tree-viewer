@@ -5,13 +5,33 @@
     <meta charset="UTF-8">
     <title>&lt;cubx-dep-tree-viewer&gt; demo</title>
 
+    <script>
+        window.cubx = {
+            CRCInit: {
+                rootDependencies: [
+                    {
+                        "webpackageId": "bootstrap-3.3.5@1.1.1",
+                        "artifactId": "bootstrap"
+                    }
+                ]
+            }
+        }
+    </script>
+
     <script src="../../../cubx.core.rte@2.1.0/webcomponents-lite/webcomponents-lite.js"></script>
     <script src="../../../cubx.core.rte@2.1.0/crc-loader/js/main.js" data-crcinit-loadcif="true"></script>
 
 </head>
 <body>
-<!--  Place cubbles components there. -->
-<cubx-dep-tree-viewer cubx-webpackage-id="this"></cubx-dep-tree-viewer>
+
+<div class="container">
+    <div class="row">
+        <h1>&lt;cubx-dep-tree-viewer&gt; Demo</h1>
+    </div>
+    <div cubx-core-crc class="row">
+        <cubx-dep-tree-viewer cubx-webpackage-id="this"></cubx-dep-tree-viewer>
+    </div>
+</div>
 
 <script>
     (function () {
@@ -24,6 +44,10 @@
                     webpackageId: 'com.incowia.cubx-webpackage-viewer@1.4.2',
                     artifactId: 'cubx-webpackage-viewer'
                 }
+//                {
+//                    webpackageId: 'ckeditor@1.0.0-SNAPSHOT',
+//                    artifactId: 'cubx-ckeditor-full'
+//                }
             ];
             // create list of DepReference items from given rootDependencies
             var deps = depMgr._createDepReferenceListFromArtifactDependencies(rootDependencies);
@@ -31,6 +55,7 @@
             // finally build rawDependency tree providing DepReference list and baseUrl
             depMgr._buildRawDependencyTree(deps, 'https://cubbles.world/sandbox/')
                     .then(function (depTree) {
+                        depTree._rootNodes.push(depTree._rootNodes[0]);
                         document.querySelector('cubx-dep-tree-viewer').setDepTree(depTree);
                     });
         });
