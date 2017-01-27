@@ -13,6 +13,9 @@
   CubxPolymer({
     is: 'cubx-dep-tree-viewer',
 
+    NODE_WIDTH: 240,
+    NODE_HEIGHT: 10,
+
     /**
      * Manipulate an element’s local DOM when the element is created.
      */
@@ -62,7 +65,7 @@
       var g = svg.append('g');
 
       var tree = d3.tree()
-        .nodeSize([10, 240])
+        .nodeSize([self.NODE_HEIGHT, self.NODE_WIDTH])
         .separation(function (a, b) { return (a.parent === b.parent ? 3 : 5); });
 
       var root = d3.hierarchy(treeRoot);
@@ -122,13 +125,17 @@
      * @private
      */
     _scaleAndCenterTree: function (svg, g) {
-      var svgSize = {width: svg.node().width.baseVal.value, height: svg.node().height.baseVal.value};
+      var svgSize = {width: svg.node().parentNode.scrollWidth, height: svg.node().height.baseVal.value};
       var gSize = {width: g.node().getBBox().width, height: g.node().getBBox().height};
-      var newX = Math.abs(svgSize.width - gSize.width) / 2;
-      var newY = Math.abs(svgSize.height - gSize.height) / 2;
-      var scaleRatio = Math.max(svgSize.width / gSize.width, svgSize.height / gSize.height);
+      var scaleRatio = Math.min(svgSize.width / gSize.width, svgSize.height / gSize.height);
+      var newX = Math.abs(svgSize.width - gSize.width * scaleRatio) / 2 + this.NODE_WIDTH * scaleRatio;
+      var newY = svgSize.height / 2;
       g.transition()
         .attr('transform', 'translate(' + newX + ',' + newY + ') ' + 'scale(' + scaleRatio + ')');
+
+      console.log('svgSize: ' + JSON.stringify(svgSize));
+      console.log('gSize: ' + JSON.stringify(gSize));
+      console.log('translate(' + newX + ',' + newY + ') ' + 'scale(' + scaleRatio + ')');
 
       return {x: newX, y: newY, scale: scaleRatio};
     },
@@ -145,8 +152,8 @@
           g.attr('transform', d3.event.transform);
         });
       svg.call(zoom);
-      zoom.scaleTo(svg, initialTransform.scale);
       zoom.translateBy(svg, initialTransform.x, initialTransform.y);
+      zoom.scaleTo(svg, initialTransform.scale);
     }
   });
 }());
