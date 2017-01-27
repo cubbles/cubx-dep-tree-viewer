@@ -145,14 +145,13 @@
      * @private
      */
     _setZoomBehaviorToSvg: function (svg, g, initialTransform) {
+      console.log(JSON.stringify(initialTransform));
       var zoom = d3.zoom()
-        .scaleExtent([1 / 2, 8])
         .on('zoom', function () {
           g.attr('transform', d3.event.transform);
         });
       svg.call(zoom);
-      zoom.translateBy(svg, initialTransform.x, initialTransform.y);
-      zoom.scaleTo(svg, initialTransform.scale);
+      svg.call(zoom.transform, d3.zoomIdentity.translate(initialTransform.x, initialTransform.y).scale(initialTransform.scale));
     }
   });
 }());
