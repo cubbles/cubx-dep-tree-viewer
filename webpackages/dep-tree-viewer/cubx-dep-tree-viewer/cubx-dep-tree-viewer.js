@@ -41,11 +41,8 @@
      *  Observe the Cubbles-Component-Model: If value for slot 'deepTree' has changed ...
      */
     modelDepTreeChanged: function (depTree) {
-      var svg = document.querySelector('svg');
-      var treeHeight = (svg.scrollHeight / depTree._rootNodes.length) - this.getMargin().top;
-      var treeWidth = svg.scrollWidth - this.getMargin().right - this.getMargin().left;
       for (var i = 0; i < depTree._rootNodes.length; i++) {
-        this._appendTree(depTree._rootNodes[i], i, treeHeight, treeWidth);
+        this._appendTree(depTree._rootNodes[i], i);
       }
     },
 
@@ -54,19 +51,19 @@
      * @param {object} treeRoot - Root node of the tree to be appened
      * @param {number} index - Number indicating the index of the tree among the list of all trees
      * to be appened
-     * @param {number} height - Height of tree
-     * @param {number} width - Width of the tree
      * @private
      */
-    _appendTree: function (treeRoot, index, height, width) {
+    _appendTree: function (treeRoot, index) {
       var self = this;
-      var svg = d3.select('svg');
-      var g = svg.append('g')
-        .attr('transform',
-          'translate(' + self.getMargin().left + ',' + (self.getMargin().top + index * height) + ')');
+      var svg = d3.select('div')
+        .append('svg')
+        .attr('width', self.getWidth())
+        .attr('height', self.getHeight());
+      var g = svg.append('g');
 
       var tree = d3.tree()
-        .size([height, width]);
+        .nodeSize([10, 240])
+        .separation(function (a, b) { return (a.parent === b.parent ? 3 : 5); });
 
       var root = d3.hierarchy(treeRoot);
       tree(root);
@@ -97,8 +94,8 @@
 
       node.append('text')
         .attr('class', self.is)
-        .attr('dy', -3)
-        .attr('x', function (d) { return d.parent ? 8 : -8; })
+        .attr('dy', -2)
+        .attr('x', function (d) { return d.parent ? 6 : -6; })
         .style('text-anchor', function (d) { return d.parent ? 'start' : 'end'; })
         .text(function (d) {
           return d.data.data.webpackageId;
@@ -106,12 +103,43 @@
 
       node.append('text')
         .attr('class', self.is)
-        .attr('dy', 9)
-        .attr('x', function (d) { return d.parent ? 8 : -8; })
+        .attr('dy', 8)
+        .attr('x', function (d) { return d.parent ? 6 : -6; })
         .style('text-anchor', function (d) { return d.parent ? 'start' : 'end'; })
         .text(function (d) {
           return '\\' + d.data.data.artifactId;
         });
+
+      var initialTransform = this._scaleAndCenterTree(svg, g);
+      this._setZoomBehaviorToSvg(svg, g, initialTransform);
+    },
+
+    _scaleAndCenterTree: function (svg, g) {
+      var svgSize = {width: svg.node().width.baseVal.value, height: svg.node().height.baseVal.value};
+      var gSize = {width: g.node().getBBox().width, height: g.node().getBBox().height};
+      var newX = Math.abs(svgSize.width - gSize.width) / 2;
+      var newY = Math.abs(svgSize.height - gSize.height) / 2;
+      var scaleRatio = Math.max(svgSize.width / gSize.width, svgSize.height / gSize.height);
+      g.transition()
+        .attr('transform', 'translate(' + newX + ',' + newY + ') ' + 'scale(' + scaleRatio + ')');
+
+      return {x: newX, y: newY, scale: scaleRatio};
+    },
+
+    /**
+     * Set the zoom behavior to the viewer
+     * to the center
+     * @private
+     */
+    _setZoomBehaviorToSvg: function (svg, g, initialTransform) {
+      var zoom = d3.zoom()
+        .scaleExtent([1 / 2, 8])
+        .on('zoom', function () {
+          g.attr('transform', d3.event.transform);
+        });
+      svg.call(zoom);
+      zoom.scaleTo(svg, initialTransform.scale);
+      zoom.translateBy(svg, initialTransform.x, initialTransform.y);
     }
   });
 }());
