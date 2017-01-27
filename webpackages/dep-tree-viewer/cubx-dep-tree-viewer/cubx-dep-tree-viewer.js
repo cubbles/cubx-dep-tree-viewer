@@ -52,13 +52,19 @@
     /**
      * Append a new tree to the svg
      * @param {object} treeRoot - Root node of the tree to be appened
-     * @param {number} index - Number indicating the index of the tree among the list of all trees
      * to be appened
      * @private
      */
-    _appendTree: function (treeRoot, index) {
+    _appendTree: function (treeRoot) {
       var self = this;
-      var svg = d3.select('#viewerDiv')
+      var viewerDiv = d3.select('#viewerDiv');
+      var treeTitle = document.createElement('h2');
+      treeTitle.appendChild(
+        document.createTextNode(treeRoot.data.webpackageId + '/' + treeRoot.data.artifactId + ' Dependency Tree')
+      );
+      viewerDiv.node().appendChild(treeTitle);
+
+      var svg = viewerDiv
         .append('div')
         .style('width', self.getWidth())
         .style('height', self.getHeight())
