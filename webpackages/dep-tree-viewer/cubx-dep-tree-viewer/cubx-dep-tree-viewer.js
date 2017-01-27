@@ -129,7 +129,7 @@
      * @private
      */
     _scaleAndCenterTree: function (svg, g) {
-      var svgSize = {width: svg.node().parentNode.scrollWidth, height: svg.node().height.baseVal.value};
+      var svgSize = {width: svg.node().parentNode.clientWidth, height: svg.node().parentNode.clientHeight};
       var gSize = {width: g.node().getBBox().width, height: g.node().getBBox().height};
       var scaleRatio = Math.min(svgSize.width / gSize.width, svgSize.height / gSize.height);
       var newX = Math.abs(svgSize.width - gSize.width * scaleRatio) / 2 + this.NODE_WIDTH * scaleRatio;
@@ -145,7 +145,6 @@
      * @private
      */
     _setZoomBehaviorToSvg: function (svg, g, initialTransform) {
-      console.log(JSON.stringify(initialTransform));
       var zoom = d3.zoom()
         .on('zoom', function () {
           g.attr('transform', d3.event.transform);
