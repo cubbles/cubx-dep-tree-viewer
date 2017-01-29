@@ -138,8 +138,8 @@
       var svgSize = {width: svg.node().parentNode.clientWidth, height: svg.node().parentNode.clientHeight};
       var gSize = {width: g.node().getBBox().width, height: g.node().getBBox().height};
       var scaleRatio = Math.min(svgSize.width / gSize.width, svgSize.height / gSize.height);
-      var newX = Math.abs(svgSize.width - gSize.width * scaleRatio) / 2 + this.NODE_WIDTH * scaleRatio;
-      var newY = svgSize.height / 2;
+      var newX = Math.abs(svgSize.width - gSize.width * scaleRatio) / 2 + Math.abs(g.node().getBBox().x) * scaleRatio;
+      var newY = Math.abs(svgSize.height - gSize.height * scaleRatio) / 2 + Math.abs(g.node().getBBox().y) * scaleRatio;
       g.transition()
         .attr('transform', 'translate(' + newX + ',' + newY + ') ' + 'scale(' + scaleRatio + ')');
       return {x: newX, y: newY, scale: scaleRatio};
@@ -156,7 +156,10 @@
           g.attr('transform', d3.event.transform);
         });
       svg.call(zoom);
-      svg.call(zoom.transform, d3.zoomIdentity.translate(initialTransform.x, initialTransform.y).scale(initialTransform.scale));
+      svg.call(zoom.transform,
+        d3.zoomIdentity
+          .translate(initialTransform.x, initialTransform.y)
+          .scale(initialTransform.scale));
     }
   });
 }());
