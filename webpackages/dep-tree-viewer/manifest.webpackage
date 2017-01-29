@@ -83,7 +83,7 @@
           {
             "slotId": "width",
             "type": "string",
-            "description": "Width for the viewer (e.g. 100%, 100px, 100em)",
+            "description": "Width for the tree(s) to be visualized (e.g. 100%, 100px, 100em)",
             "direction": [
               "input"
             ],
@@ -92,20 +92,11 @@
           {
             "slotId": "height",
             "type": "string",
-            "description": "Height for the viewer contain the trees (e.g. 100px, 100em)",
+            "description": "Height for the tree(s) to be visualized (e.g. 100%, 100px, 100em)",
             "direction": [
               "input"
             ],
             "value": "20em"
-          },
-          {
-            "slotId": "margin",
-            "type": "object",
-            "description": "Margin for the viewer, an object with the form {top: 10, right: 120, bottom: 10, left: 150}",
-            "direction": [
-              "input"
-            ],
-            "value": {"top": 10, "right": 120, "bottom": 10, "left": 150}
           }
         ]
       }
