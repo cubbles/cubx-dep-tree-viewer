@@ -2,7 +2,7 @@
 Webpackage containing the necessary artifacts for the cubx-dep-tree-viewer.
 ### Artifacts of the webpackage
 | Name | Type | Description | Links |
-|-|-|-|-|
+|---|---|---|---|
 | **app** | Application | This is a simple pre-generated app. | [app](https://cubbles.world/sandbox/dep-tree-viewer@1.0.0-SNAPSHOT/index.html)   |
 | **docs** | Application | Generated webpackage documentation. | [docs](https://cubbles.world/sandbox/dep-tree-viewer@1.0.0-SNAPSHOT/index.html)   |
 | **cubx-dep-tree-viewer** | Elementary Component | Component to visualize the dependency tree of a component. | [demo](https://cubbles.world/sandbox/dep-tree-viewer@1.0.0-SNAPSHOT/demo/index.html)  [docs](https://cubbles.world/sandbox/dep-tree-viewer@1.0.0-SNAPSHOT/docs/index.html)   |
