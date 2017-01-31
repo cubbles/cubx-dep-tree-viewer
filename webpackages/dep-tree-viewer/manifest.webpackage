@@ -1,7 +1,7 @@
 {
   "name": "dep-tree-viewer",
   "groupId": "",
-  "version": "1.0.0",
+  "version": "1.0.1-SNAPSHOT",
   "modelVersion": "9.1.1",
   "docType": "webpackage",
   "author": {
@@ -88,9 +88,129 @@
             "value": "20em"
           }
         ]
+      },
+      {
+        "artifactId": "cubx-root-deps-to-dep-trees",
+        "description": "Create the dependency trees for a set of root dependencies",
+        "runnables": [
+          {
+            "name": "demo",
+            "path": "/demo/index.html",
+            "description": "Demo app..."
+          },
+          {
+            "name": "docs",
+            "path": "/docs/index.html",
+            "description": "Show the interface of this component."
+          }
+        ],
+        "resources": [
+          "cubx-root-deps-to-dep-trees.html"
+        ],
+        "dependencies": [
+          {
+            "webpackageId": "cubx.core.rte@2.1.0",
+            "artifactId": "cubxpolymer"
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "rootDependencies",
+            "type": "object",
+            "description": "Array of artifacts as root dependencies to be parsed into depTrees, e.g. [{webpackageId: 'my-package@1.0', artifactId: 'my-compA'}]",
+            "direction": [
+              "input"
+            ]
+          },
+          {
+            "slotId": "depTrees",
+            "type": "object",
+            "description": "Dependency trees of the 'rootDependencies'",
+            "direction": [
+              "output"
+            ]
+          }
+        ]
       }
     ],
-    "compoundComponents": [],
+    "compoundComponents": [
+      {
+        "artifactId": "cubx-deps-tree-viewer",
+        "description": "Visualize the dep-trees of an array of root dependencies",
+        "runnables": [
+          {
+            "name": "demo",
+            "path": "/demo/index.html",
+            "description": "Demo app..."
+          },
+          {
+            "name": "docs",
+            "path": "/docs/index.html",
+            "description": "Show the interface and dataflow of this component."
+          }
+        ],
+        "resources": [
+          "css/cubx-deps-tree-viewer.css"
+        ],
+        "dependencies": [
+          {
+            "artifactId": "cubx-dep-tree-viewer"
+          },
+          {
+            "artifactId": "cubx-root-deps-to-dep-trees"
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "rootDependencies",
+            "type": "object",
+            "description": "Array of artifacts as root dependencies to be visualized, e.g. [{webpackageId: 'my-package@1.0', artifactId: 'my-compA'}]",
+            "direction": [
+              "input"
+            ]
+          }
+        ],
+        "members": [
+          {
+            "memberId": "depTreeViewer",
+            "artifactId": "cubx-dep-tree-viewer"
+          },
+          {
+            "memberId": "depsToTree",
+            "artifactId": "cubx-root-deps-to-dep-trees"
+          }
+        ],
+        "connections": [
+          {
+            "connectionId": "rootDepsCon",
+            "source": {
+              "slot": "rootDependencies"
+            },
+            "destination": {
+              "memberIdRef": "depsToTree",
+              "slot": "rootDependencies"
+            }
+          },
+          {
+            "connectionId": "depTreesCon",
+            "source": {
+              "memberIdRef": "depsToTree",
+              "slot": "depTrees"
+            },
+            "destination": {
+              "memberIdRef": "depTreeViewer",
+              "slot": "depTree"
+            }
+          }
+        ],
+        "inits": [
+          {
+            "slot": "outdoorTemperature",
+            "value": 0
+          }
+        ]
+      }
+    ],
     "utilities": []
   }
 }
