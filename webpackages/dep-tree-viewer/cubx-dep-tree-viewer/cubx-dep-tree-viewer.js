@@ -15,6 +15,7 @@
 
     NODE_WIDTH: 240,
     NODE_HEIGHT: 10,
+    VIEW_HOLDER_ID: 'viewerDiv',
 
     /**
      * Manipulate an element’s local DOM when the element is created.
@@ -44,9 +45,18 @@
      *  Observe the Cubbles-Component-Model: If value for slot 'deepTree' has changed ...
      */
     modelDepTreeChanged: function (depTree) {
+      this._clearViewer();
       for (var i = 0; i < depTree._rootNodes.length; i++) {
         this._appendTree(depTree._rootNodes[i], i);
       }
+    },
+
+    /**
+     * Clears the dependency trees container
+     * @private
+     */
+    _clearViewer: function () {
+      d3.select('#' + this.VIEW_HOLDER_ID).html('');
     },
 
     /**
@@ -57,7 +67,7 @@
      */
     _appendTree: function (treeRoot) {
       var self = this;
-      var viewerDiv = d3.select('#viewerDiv');
+      var viewerDiv = d3.select('#' + this.VIEW_HOLDER_ID);
       var treeTitle = document.createElement('h2');
       treeTitle.appendChild(
         document.createTextNode(treeRoot.data.webpackageId + '/' + treeRoot.data.artifactId + ' Dependency Tree')
