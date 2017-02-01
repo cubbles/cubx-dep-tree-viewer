@@ -84,25 +84,22 @@
         .attr('height', '100%');
       var g = svg.append('g');
 
-      var tree = d3.tree()
+      var tree = d3.layout.tree()
         .nodeSize([self.NODE_HEIGHT, self.NODE_WIDTH])
         .separation(function (a, b) { return (a.parent === b.parent ? 3 : 5); });
 
-      var root = d3.hierarchy(treeRoot);
-      tree(root);
-      g.selectAll('.link')
-        .data(root.descendants().slice(1))
+      var nodes = tree.nodes(treeRoot);
+
+      var diagonal = d3.svg.diagonal()
+        .projection(function (d) { return [d.y, d.x]; });
+      g.selectAll('link')
+        .data(tree.links(nodes))
         .enter().append('path')
         .attr('class', 'link ' + self.is)
-        .attr('d', function (d) {
-          return 'M' + d.y + ',' + d.x +
-            'C' + (d.parent.y + 100) + ',' + d.x +
-            ' ' + (d.parent.y + 100) + ',' + d.parent.x +
-            ' ' + d.parent.y + ',' + d.parent.x;
-        });
+        .attr('d', diagonal);
 
-      var node = g.selectAll('.node')
-        .data(root.descendants())
+      var node = g.selectAll('node')
+        .data(nodes)
         .enter().append('g')
         .attr('class', function (d) {
           return 'node' + (d.children ? ' node--internal' : ' node--leaf') + ' ' + self.is;
@@ -121,7 +118,7 @@
         .attr('x', function (d) { return d.parent ? 6 : -6; })
         .style('text-anchor', function (d) { return d.parent ? 'start' : 'end'; })
         .text(function (d) {
-          return d.data.data.webpackageId;
+          return d.data.webpackageId;
         });
 
       node.append('text')
@@ -130,7 +127,7 @@
         .attr('x', function (d) { return d.parent ? 6 : -6; })
         .style('text-anchor', function (d) { return d.parent ? 'start' : 'end'; })
         .text(function (d) {
-          return '\\' + d.data.data.artifactId;
+          return '\\' + d.data.artifactId;
         });
 
       var initialTransform = this._scaleAndCenterTree(svg, g);
@@ -161,15 +158,13 @@
      * @private
      */
     _setZoomBehaviorToSvg: function (svg, g, initialTransform) {
-      var zoom = d3.zoom()
+      var zoom = d3.behavior.zoom()
+        .translate([initialTransform.x, initialTransform.y])
+        .scale(initialTransform.scale)
         .on('zoom', function () {
-          g.attr('transform', d3.event.transform);
+          g.attr('transform', 'translate(' + d3.event.translate + ')' + ' scale(' + d3.event.scale + ')');
         });
       svg.call(zoom);
-      svg.call(zoom.transform,
-        d3.zoomIdentity
-          .translate(initialTransform.x, initialTransform.y)
-          .scale(initialTransform.scale));
     }
   });
 }());

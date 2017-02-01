@@ -56,7 +56,7 @@
             "artifactId": "cubxpolymer"
           },
           {
-            "webpackageId": "d3-4.4.0@1.0.0",
+            "webpackageId": "d3-3.5.3@1.1.0",
             "artifactId": "d3"
           }
         ],
