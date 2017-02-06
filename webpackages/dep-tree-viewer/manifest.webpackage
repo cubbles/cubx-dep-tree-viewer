@@ -87,6 +87,14 @@
               "input"
             ],
             "value": "20em"
+          },
+          {
+            "slotId": "scale",
+            "type": "string",
+            "description": "Ratio for the tree to be scaled",
+            "direction": [
+              "input"
+            ]
           }
         ]
       },

@@ -16,6 +16,9 @@
     NODE_WIDTH: 240,
     NODE_HEIGHT: 10,
     VIEW_HOLDER_ID: 'viewerDiv',
+    svg: {},
+    g: {},
+    stauts: 'init',
 
     /**
      * Manipulate an element’s local DOM when the element is created.
@@ -52,6 +55,15 @@
     },
 
     /**
+     *  Observe the Cubbles-Component-Model: If value for slot 'scale' has changed ...
+     */
+    modelScaleChanged: function (scale) {
+      if (this.status === 'ready') {
+        this._scaleAndCenterTree(scale);
+      }
+    },
+
+    /**
      * Clears the dependency trees container
      * @private
      */
@@ -66,6 +78,7 @@
      * @private
      */
     _appendTree: function (treeRoot) {
+      this.status = 'init';
       var self = this;
       var viewerDiv = d3.select('#' + this.VIEW_HOLDER_ID);
       var treeTitle = document.createElement('h2');
@@ -74,7 +87,7 @@
       );
       viewerDiv.node().appendChild(treeTitle);
 
-      var svg = viewerDiv
+      this.svg = viewerDiv
         .append('div')
         .style('width', self.getWidth())
         .style('height', self.getHeight())
@@ -82,7 +95,7 @@
         .append('svg')
         .attr('width', '100%')
         .attr('height', '100%');
-      var g = svg.append('g');
+      this.g = this.svg.append('g');
 
       var tree = d3.layout.tree()
         .nodeSize([self.NODE_HEIGHT, self.NODE_WIDTH])
@@ -92,13 +105,13 @@
 
       var diagonal = d3.svg.diagonal()
         .projection(function (d) { return [d.y, d.x]; });
-      g.selectAll('link')
+      this.g.selectAll('link')
         .data(tree.links(nodes))
         .enter().append('path')
         .attr('class', 'link ' + self.is)
         .attr('d', diagonal);
 
-      var node = g.selectAll('node')
+      var node = this.g.selectAll('node')
         .data(nodes)
         .enter().append('g')
         .attr('class', function (d) {
@@ -129,9 +142,10 @@
         .text(function (d) {
           return '\\' + d.data.artifactId;
         });
-
-      var initialTransform = this._scaleAndCenterTree(svg, g);
-      this._setZoomBehaviorToSvg(svg, g, initialTransform);
+      this.status = 'ready';
+      if (this.getScale()) {
+        this._scaleAndCenterTree(this.getScale());
+      }
     },
 
     /**
@@ -141,15 +155,21 @@
      * @returns {{x: number, y: number, scale: number}} - Final position and scale ratio
      * @private
      */
-    _scaleAndCenterTree: function (svg, g) {
-      var svgSize = {width: svg.node().parentNode.clientWidth, height: svg.node().parentNode.clientHeight};
-      var gSize = {width: g.node().getBBox().width, height: g.node().getBBox().height};
-      var scaleRatio = Math.min(svgSize.width / gSize.width, svgSize.height / gSize.height);
-      var newX = Math.abs(svgSize.width - gSize.width * scaleRatio) / 2 + Math.abs(g.node().getBBox().x) * scaleRatio;
-      var newY = Math.abs(svgSize.height - gSize.height * scaleRatio) / 2 + Math.abs(g.node().getBBox().y) * scaleRatio;
-      g.transition()
-        .attr('transform', 'translate(' + newX + ',' + newY + ') ' + 'scale(' + scaleRatio + ')');
-      return {x: newX, y: newY, scale: scaleRatio};
+    _scaleAndCenterTree: function (scale) {
+      var svgSize;
+      var gSize;
+      if (scale === 'auto') {
+        svgSize = {width: this.svg.node().parentNode.clientWidth, height: this.svg.node().parentNode.clientHeight};
+        gSize = {width: this.g.node().getBBox().width, height: this.g.node().getBBox().height};
+        scale = Math.min(svgSize.width / gSize.width, svgSize.height / gSize.height);
+      }
+      var newX = Math.abs(svgSize.width - gSize.width * scale) / 2 + Math.abs(this.g.node().getBBox().x) * scale;
+      var newY = Math.abs(svgSize.height - gSize.height * scale) / 2 + Math.abs(this.g.node().getBBox().y) * scale;
+      this.g.transition()
+        .attr('transform', 'translate(' + newX + ',' + newY + ') ' + 'scale(' + scale + ')');
+      var transform = {x: newX, y: newY, scale: scale};
+      this._setZoomBehaviorToSvg(transform);
+      return transform;
     },
 
     /**
@@ -157,14 +177,14 @@
      * to the center
      * @private
      */
-    _setZoomBehaviorToSvg: function (svg, g, initialTransform) {
+    _setZoomBehaviorToSvg: function (currentTransform) {
       var zoom = d3.behavior.zoom()
-        .translate([initialTransform.x, initialTransform.y])
-        .scale(initialTransform.scale)
+        .translate([currentTransform.x, currentTransform.y])
+        .scale(currentTransform.scale)
         .on('zoom', function () {
-          g.attr('transform', 'translate(' + d3.event.translate + ')' + ' scale(' + d3.event.scale + ')');
+          this.g.attr('transform', 'translate(' + d3.event.translate + ')' + ' scale(' + d3.event.scale + ')');
         });
-      svg.call(zoom);
+      this.svg.call(zoom);
     }
   });
 }());
