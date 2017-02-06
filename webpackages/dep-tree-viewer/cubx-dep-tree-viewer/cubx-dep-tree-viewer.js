@@ -81,12 +81,13 @@
       this.status = 'init';
       var self = this;
       var viewerDiv = d3.select('#' + this.VIEW_HOLDER_ID);
-      var treeTitle = document.createElement('h2');
-      treeTitle.appendChild(
-        document.createTextNode(treeRoot.data.webpackageId + '/' + treeRoot.data.artifactId + ' Dependency Tree')
-      );
-      viewerDiv.node().appendChild(treeTitle);
-
+      if (this.getShowTitle()) {
+        var treeTitle = document.createElement('h2');
+        treeTitle.appendChild(
+          document.createTextNode(treeRoot.data.webpackageId + '/' + treeRoot.data.artifactId + ' Dependency Tree')
+        );
+        viewerDiv.node().appendChild(treeTitle);
+      }
       var svg = viewerDiv
         .append('div')
         .style('width', self.getWidth())

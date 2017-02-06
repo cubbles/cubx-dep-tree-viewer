@@ -56,8 +56,9 @@
             depMgr._buildRawDependencyTree(deps, 'https://cubbles.world/sandbox/')
                     .then(function (depTree) {
                         depTree._rootNodes.push(depTree._rootNodes[0]);
-                        document.querySelector('cubx-dep-tree-viewer').setDepTree(depTree);
                         document.querySelector('cubx-dep-tree-viewer').setScale('auto');
+                        document.querySelector('cubx-dep-tree-viewer').setShowTitle(true);
+                        document.querySelector('cubx-dep-tree-viewer').setDepTree(depTree);
                     });
         });
     })();

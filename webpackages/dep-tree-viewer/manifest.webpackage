@@ -95,6 +95,15 @@
             "direction": [
               "input"
             ]
+          },
+          {
+            "slotId": "showTitle",
+            "type": "boolean",
+            "description": "Boolean indicating whether the title should be displayed",
+            "direction": [
+              "input"
+            ],
+            "value": false
           }
         ]
       },
@@ -179,9 +188,33 @@
             ]
           },
           {
+            "slotId": "width",
+            "type": "string",
+            "description": "Width for each tree to be visualized (e.g. 100%, 100px, 100em)",
+            "direction": [
+              "input"
+            ]
+          },
+          {
+            "slotId": "height",
+            "type": "string",
+            "description": "Height for each tree to be visualized (e.g. 100%, 100px, 100em)",
+            "direction": [
+              "input"
+            ]
+          },
+          {
             "slotId": "scale",
             "type": "string",
             "description": "Ratio for the tree to be scaled, use 'auto' if you want it to be automatically calculated",
+            "direction": [
+              "input"
+            ]
+          },
+          {
+            "slotId": "showTitle",
+            "type": "boolean",
+            "description": "Boolean indicating whether the title should be displayed",
             "direction": [
               "input"
             ]
@@ -227,6 +260,37 @@
             "destination": {
               "memberIdRef": "depTreeViewer",
               "slot": "scale"
+            },
+            "repeatedValues": true
+          },
+          {
+            "connectionId": "widthCon",
+            "source": {
+              "slot": "width"
+            },
+            "destination": {
+              "memberIdRef": "depTreeViewer",
+              "slot": "width"
+            }
+          },
+          {
+            "connectionId": "heightCon",
+            "source": {
+              "slot": "height"
+            },
+            "destination": {
+              "memberIdRef": "depTreeViewer",
+              "slot": "height"
+            }
+          },
+          {
+            "connectionId": "showTitleCon",
+            "source": {
+              "slot": "showTitle"
+            },
+            "destination": {
+              "memberIdRef": "depTreeViewer",
+              "slot": "showTitle"
             }
           }
         ],
