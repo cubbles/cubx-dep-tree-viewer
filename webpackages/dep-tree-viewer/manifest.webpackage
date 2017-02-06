@@ -91,7 +91,7 @@
           {
             "slotId": "scale",
             "type": "string",
-            "description": "Ratio for the tree to be scaled",
+            "description": "Ratio for the tree to be scaled, use 'auto' if you want it to be automatically calculated",
             "direction": [
               "input"
             ]
@@ -177,6 +177,14 @@
             "direction": [
               "input"
             ]
+          },
+          {
+            "slotId": "scale",
+            "type": "string",
+            "description": "Ratio for the tree to be scaled, use 'auto' if you want it to be automatically calculated",
+            "direction": [
+              "input"
+            ]
           }
         ],
         "members": [
@@ -209,6 +217,16 @@
             "destination": {
               "memberIdRef": "depTreeViewer",
               "slot": "depTree"
+            }
+          },
+          {
+            "connectionId": "scaleCon",
+            "source": {
+              "slot": "scale"
+            },
+            "destination": {
+              "memberIdRef": "depTreeViewer",
+              "slot": "scale"
             }
           }
         ],
