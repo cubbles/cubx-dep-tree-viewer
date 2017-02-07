@@ -58,7 +58,7 @@
     modelScaleChanged: function (scale) {
       var self = this;
       if (this.status === 'ready') {
-        d3.selectAll('svg').call(function (svg) {
+        d3.select(Polymer.dom(this.root)).selectAll('svg').call(function (svg) {
           self._scaleAndCenterTree(svg, svg.select('g'), scale);
         });
       }
