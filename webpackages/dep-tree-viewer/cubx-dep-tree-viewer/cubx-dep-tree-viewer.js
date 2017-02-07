@@ -58,6 +58,14 @@
     modelScaleChanged: function (scale) {
       var self = this;
       if (this.status === 'ready') {
+        if (scale !== 'auto') {
+          scale = parseFloat(scale);
+          if (isNaN(scale)) {
+            console.error('Invalid value of scale. Possible values are \'auto\', or any float ' +
+              'passed as STRING.');
+            return;
+          }
+        }
         d3.select(Polymer.dom(this.root)).selectAll('svg').call(function (svg) {
           self._scaleAndCenterTree(svg, svg.select('g'), scale);
         });
