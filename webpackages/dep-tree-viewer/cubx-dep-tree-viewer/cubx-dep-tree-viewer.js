@@ -58,18 +58,40 @@
     modelScaleChanged: function (scale) {
       var self = this;
       if (this.status === 'ready') {
-        if (scale !== 'auto') {
-          scale = parseFloat(scale);
-          if (isNaN(scale)) {
-            console.error('Invalid value of scale. Possible values are \'auto\', or any float ' +
-              'passed as STRING.');
-            return;
-          }
+        if (!this._isValidScale(scale)) {
+          console.error('Invalid value of scale. Possible values are \'none\', \'auto\', or a positive float ' +
+            'passed as STRING.');
+          return;
+        }
+        if (scale === 'none') {
+          return;
         }
         d3.select(Polymer.dom(this.root)).selectAll('svg').call(function (svg) {
           self._scaleAndCenterTree(svg, svg.select('g'), scale);
         });
       }
+    },
+
+    /**
+     * Indicate whether the given 'scale' is valid
+     * @param {string} scale - Scale to be validated
+     * @returns {boolean} True if scale is valid, otherwise false
+     * @private
+     */
+    _isValidScale: function (scale) {
+      if (!scale) {
+        return false;
+      }
+      if (scale !== 'auto' && scale !== 'none') {
+        scale = parseFloat(scale);
+        if (isNaN(scale)) {
+          return false;
+        }
+      }
+      if (scale < 0) {
+        return false;
+      }
+      return true;
     },
 
     /**
@@ -152,7 +174,7 @@
           return '\\' + d.data.artifactId;
         });
       this.status = 'ready';
-      if (this.getScale()) {
+      if (this._isValidScale(this.getScale()) && this.getScale() !== 'none') {
         this._scaleAndCenterTree(svg, g, this.getScale());
       }
     },
@@ -175,6 +197,11 @@
       }
       var newX = Math.abs(svgSize.width - gSize.width * scale) / 2 + Math.abs(g.node().getBBox().x) * scale;
       var newY = Math.abs(svgSize.height - gSize.height * scale) / 2 + Math.abs(g.node().getBBox().y) * scale;
+      if (isNaN(scale) || isNaN(newX) || isNaN(newY)) {
+        console.warn('Dimensions and position of the dependency tree(s) containers could not be ' +
+          'calculated. The component should be attached to the DOM.');
+        return;
+      }
       g.transition()
         .attr('transform', 'translate(' + newX + ',' + newY + ') ' + 'scale(' + scale + ')');
       var transform = {x: newX, y: newY, scale: scale};
