@@ -52,7 +52,7 @@
         ],
         "dependencies": [
           {
-            "webpackageId": "cubx.core.rte@2.1.0",
+            "webpackageId": "cubx.core.rte@2.1.2",
             "artifactId": "cubxpolymer"
           },
           {
@@ -116,11 +116,6 @@
         "description": "Create the dependency trees for a set of root dependencies",
         "runnables": [
           {
-            "name": "demo",
-            "path": "/demo/index.html",
-            "description": "Demo app..."
-          },
-          {
             "name": "docs",
             "path": "/docs/index.html",
             "description": "Show the interface of this component."
@@ -131,7 +126,7 @@
         ],
         "dependencies": [
           {
-            "webpackageId": "cubx.core.rte@2.1.0",
+            "webpackageId": "cubx.core.rte@2.1.2",
             "artifactId": "cubxpolymer"
           }
         ],
