@@ -127,6 +127,14 @@
         .attr('width', '100%')
         .attr('height', '100%');
       var g = svg.append('g');
+      this._setTooltipCapabilityToSvg(svg, function getResourcesMessage (d) {
+        var resources = d.data.resources;
+        var msg = '<strong>Resources:</strong><br>';
+        for (var i = 0; i < resources.length; i++) {
+          msg += '<strong>' + (i + 1) + '. </strong>' + JSON.stringify(resources[i], null, '\t') + '<br>';
+        }
+        return msg;
+      });
 
       var tree = d3.layout.tree()
         .nodeSize([self.NODE_HEIGHT, self.NODE_WIDTH])
@@ -150,7 +158,9 @@
         })
         .attr('transform', function (d) {
           return 'translate(' + d.y + ',' + d.x + ')';
-        });
+        })
+        .on('mouseover', self.infoToolTip.show)
+        .on('mouseout', self.infoToolTip.hide);
 
       node.append('circle')
         .attr('class', self.is)
@@ -225,6 +235,24 @@
           g.attr('transform', 'translate(' + d3.event.translate + ')' + ' scale(' + d3.event.scale + ')');
         });
       svg.call(zoom);
+    },
+
+    /**
+     * Allow the 'svg' to show a tooltip showing the 'message'
+     * @param {object} svg - D3 selection of the svg element
+     * @param {(function|string)} message - String containing the message to be shown or a function
+     * returning the string
+     * @private
+     */
+    _setTooltipCapabilityToSvg: function (svg, message) {
+      // Tooltip
+      this.infoToolTip = d3.tip()
+        .attr('class', 'info_tooltip ' + this.is)
+        .offset([ 30, 0 ])
+        .html(message);
+      this.infoToolTip.direction('e');
+
+      svg.call(this.infoToolTip);
     }
   });
 }());
