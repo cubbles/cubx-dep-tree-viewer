@@ -131,7 +131,8 @@
         var resources = d.data.resources;
         var msg = '<strong>Resources:</strong><br>';
         for (var i = 0; i < resources.length; i++) {
-          msg += '<strong>' + (i + 1) + '. </strong>' + JSON.stringify(resources[i], null, '\t') + '<br>';
+          msg += '<strong>' + (i + 1) + '. </strong>' +
+            JSON.stringify(resources[i], null, '   ') + '<br>';
         }
         return msg;
       });
