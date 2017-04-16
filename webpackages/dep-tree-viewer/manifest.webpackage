@@ -1,7 +1,7 @@
 {
   "name": "dep-tree-viewer",
   "groupId": "",
-  "version": "1.0.1",
+  "version": "1.1.0-SNAPSHOT",
   "modelVersion": "9.1.1",
   "docType": "webpackage",
   "author": {
@@ -52,7 +52,7 @@
         ],
         "dependencies": [
           {
-            "webpackageId": "cubx.core.rte@2.1.2",
+            "webpackageId": "cubx.core.rte@2.2.3",
             "artifactId": "cubxpolymer"
           },
           {
@@ -126,7 +126,7 @@
         ],
         "dependencies": [
           {
-            "webpackageId": "cubx.core.rte@2.1.2",
+            "webpackageId": "cubx.core.rte@2.2.3",
             "artifactId": "cubxpolymer"
           }
         ],
