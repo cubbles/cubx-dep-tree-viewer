@@ -61,7 +61,7 @@
             "endpointId": "html-import"
           },
           {
-            "webpackageId": "com.incowia.cubx-webpackage-viewer@1.5.0",
+            "webpackageId": "d3-tip-0.6.7@1.0.0",
             "artifactId": "d3-tip"
           }
         ],
