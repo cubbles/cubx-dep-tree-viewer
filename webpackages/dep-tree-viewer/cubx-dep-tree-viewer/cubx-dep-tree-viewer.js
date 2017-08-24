@@ -114,7 +114,7 @@
       if (this.getShowTitle()) {
         var treeTitle = document.createElement('h2');
         treeTitle.appendChild(
-          document.createTextNode(treeRoot.data.webpackageId + '/' + treeRoot.data.artifactId + ' Dependency Tree')
+          document.createTextNode(treeRoot.data.webpackageId + '/' + treeRoot.data.artifactId)
         );
         viewerDiv.node().appendChild(treeTitle);
       }
