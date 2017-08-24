@@ -57,7 +57,7 @@
       var deps = depMgr._createDepReferenceListFromArtifactDependencies(rootDependencies);
 
       // Finally build rawDependency tree providing DepReference list and baseUrl
-      depMgr._buildRawDependencyTree(deps, window.cubx.CRC._baseUrl)
+      depMgr._buildRawDependencyTree(deps, this.getBaseUrl() || window.cubx.CRC._baseUrl)
         .then(function (depTree) {
           callback(depTree);
         });
