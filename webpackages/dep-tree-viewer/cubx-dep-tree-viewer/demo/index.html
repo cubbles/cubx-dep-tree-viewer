@@ -50,7 +50,7 @@
 //                }
             ];
             // create list of DepReference items from given rootDependencies
-            var deps = depMgr._createDepReferenceListFromArtifactDependencies(rootDependencies);
+            var deps = depMgr._createDepReferenceListFromArtifactDependencies(rootDependencies, null);
 
             // finally build rawDependency tree providing DepReference list and baseUrl
             depMgr._buildRawDependencyTree(deps, 'https://cubbles.world/sandbox/')
