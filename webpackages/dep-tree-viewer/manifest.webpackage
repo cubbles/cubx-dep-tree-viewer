@@ -99,15 +99,6 @@
             "direction": [
               "input"
             ]
-          },
-          {
-            "slotId": "showTitle",
-            "type": "boolean",
-            "description": "Boolean indicating whether the title should be displayed",
-            "direction": [
-              "input"
-            ],
-            "value": false
           }
         ]
       },
