@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <title>&lt;cubx-dep-tree-viewer&gt; demo</title>
 
+    <script src="../../../cubx.core.rte@3.0.0-SNAPSHOT/webcomponents/custom-elements-es5-adapter.js"></script>
+    <script src="../../../cubx.core.rte@3.0.0-SNAPSHOT/webcomponents/webcomponents-lite.js"></script>
     <script>
         window.cubx = {
             CRCInit: {
                 rootDependencies: [
                     {
-                        "webpackageId": "bootstrap-3.3.5@1.1.1",
+                        "webpackageId": "bootstrap-3.3.5@2.0.0",
                         "artifactId": "bootstrap"
                     }
                 ]
@@ -18,8 +20,7 @@
         }
     </script>
 
-    <script src="../../../cubx.core.rte@2.4.0/webcomponents-lite/webcomponents-lite.js"></script>
-    <script src="../../../cubx.core.rte@2.4.0/crc-loader/js/main.js" data-crcinit-loadcif="true"></script>
+<script src="../../../cubx.core.rte@3.0.0-SNAPSHOT/crc-loader/js/main.js" data-crcinit-loadcif="true"></script>
 
 </head>
 <body>
@@ -44,21 +45,17 @@
                     webpackageId: 'com.incowia.cubx-webpackage-viewer@1.4.2',
                     artifactId: 'cubx-webpackage-viewer'
                 }
-//                {
-//                    webpackageId: 'ckeditor@1.0.0-SNAPSHOT',
-//                    artifactId: 'cubx-ckeditor-full'
-//                }
             ];
             // create list of DepReference items from given rootDependencies
             var deps = depMgr._createDepReferenceListFromArtifactDependencies(rootDependencies, null);
 
             // finally build rawDependency tree providing DepReference list and baseUrl
             depMgr._buildRawDependencyTree(deps, 'https://cubbles.world/sandbox/')
-                    .then(function (depTree) {
-                        depTree._rootNodes.push(depTree._rootNodes[0]);
-                        document.querySelector('cubx-dep-tree-viewer').setScale('auto');
-                        document.querySelector('cubx-dep-tree-viewer').setDepTree(depTree);
-                    });
+                .then(function (depTree) {
+                    depTree._rootNodes.push(depTree._rootNodes[0]);
+                    document.querySelector('cubx-dep-tree-viewer').setScale('auto');
+                    document.querySelector('cubx-dep-tree-viewer').setDepTree(depTree);
+                });
         });
     })();
 </script>

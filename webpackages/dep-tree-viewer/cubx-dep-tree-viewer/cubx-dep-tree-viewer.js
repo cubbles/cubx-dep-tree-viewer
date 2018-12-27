@@ -1,46 +1,14 @@
 /* global d3 */
 (function () {
   'use strict';
-  /**
-   * Get help:
-   * > Lifecycle callbacks:
-   * https://www.polymer-project.org/1.0/docs/devguide/registering-elements.html#lifecycle-callbacks
-   *
-   * Access the Cubbles-Component-Model:
-   * > Access slot values:
-   * slot 'a': this.getA(); | this.setA(value)
-   */
-  CubxPolymer({
+
+  CubxComponent({
     is: 'cubx-dep-tree-viewer',
 
     NODE_WIDTH: 240,
     NODE_HEIGHT: 10,
     VIEW_HOLDER_ID: 'viewerDiv',
     status: 'init',
-
-    /**
-     * Manipulate an element’s local DOM when the element is created.
-     */
-    created: function () {
-    },
-
-    /**
-     * Manipulate an element’s local DOM when the element is created and initialized.
-     */
-    ready: function () {
-    },
-
-    /**
-     * Manipulate an element’s local DOM when the element is attached to the document.
-     */
-    attached: function () {
-    },
-
-    /**
-     * Manipulate an element’s local DOM when the cubbles framework is initialized and ready to work.
-     */
-    cubxReady: function () {
-    },
 
     /**
      *  Observe the Cubbles-Component-Model: If value for slot 'rootNode' has changed ...
@@ -66,7 +34,7 @@
         if (scale === 'none') {
           return;
         }
-        d3.select(Polymer.dom(this.root)).selectAll('svg').call(function (svg) {
+        d3.select(this).selectAll('svg').call(function (svg) {
           self._scaleAndCenterTree(svg, svg.select('g'), scale);
         });
       }
@@ -99,11 +67,11 @@
      * @private
      */
     _clearViewer: function () {
-      d3.select('#' + this.VIEW_HOLDER_ID).html('');
+      d3.select(this.querySelector('#' + this.VIEW_HOLDER_ID)).html('');
     },
 
     _createTreePanel: function () {
-      var viewerDiv = d3.select('#' + this.VIEW_HOLDER_ID);
+      var viewerDiv = d3.select(this.querySelector('#' + this.VIEW_HOLDER_ID));
       var panel;
       panel = viewerDiv
         .append('div')

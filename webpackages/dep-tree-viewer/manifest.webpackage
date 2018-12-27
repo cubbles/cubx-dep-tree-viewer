@@ -1,8 +1,8 @@
 {
   "name": "dep-tree-viewer",
   "groupId": "",
-  "version": "1.4.0-SNAPSHOT",
-  "modelVersion": "9.1.1",
+  "version": "2.0.0-SNAPSHOT",
+  "modelVersion": "10.0.0",
   "docType": "webpackage",
   "author": {
     "name": "Philipp Wagner",
@@ -48,20 +48,20 @@
           }
         ],
         "resources": [
-          "cubx-dep-tree-viewer.html"
+          "cubx-dep-tree-viewer.html",
+          "cubx-dep-tree-viewer.css"
         ],
         "dependencies": [
           {
-            "webpackageId": "cubx.core.rte@2.4.0",
-            "artifactId": "cubxpolymer"
+            "webpackageId": "cubx.core.rte@3.0.0-SNAPSHOT",
+            "artifactId": "cubxcomponent"
           },
           {
-            "webpackageId": "d3-3.5.3@1.0.0",
-            "artifactId": "d3",
-            "endpointId": "html-import"
+            "webpackageId": "d3-3.5.3@2.0.0",
+            "artifactId": "d3"
           },
           {
-            "webpackageId": "d3-tip-0.6.7@1.0.0",
+            "webpackageId": "d3-tip-0.6.7@2.0.1",
             "artifactId": "d3-tip"
           }
         ],
