@@ -166,7 +166,6 @@
           }
         ],
         "resources": [
-          "css/cubx-deps-tree-viewer.css"
         ],
         "dependencies": [
           {
