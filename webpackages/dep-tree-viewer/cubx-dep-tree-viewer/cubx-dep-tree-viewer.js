@@ -79,35 +79,36 @@
       return panel;
     },
 
-    _addHeadingToTreePanel: function (treePanel, treeRootData, treeIndex) {
-      var treeHeading = treePanel
-        .append('div')
-        .attr('class', this._addScopeToClassName('panel-heading'));
+    _generateHeadingForTreePanel: function (bodyPanel, treeRootData) {
+      var treeHeading = d3.select(document.createElement('div'));
+      treeHeading.attr('class', this._addScopeToClassName('panel-heading'));      
       var treeTitle = treeHeading
         .append('h2')
         .attr('class', this._addScopeToClassName('panel-title'));
       var treeTitleToggle = treeTitle
         .append('a')
-        .attr('data-toggle', 'collapse')
-        .attr('data-parent', '#' + this.VIEW_HOLDER_ID)
-        .attr('href', '#' + this._generateTreeId(treeIndex));
+        .on('click', function(){
+          $(bodyPanel.node()).collapse('toggle');
+      });
       treeTitleToggle.append('text')
         .text(this._generateTreeTitleText(treeRootData));
       treeTitleToggle.append('span')
         .attr('class', this._addScopeToClassName('glyphicon glyphicon-chevron-down pull-right'));
+      return treeHeading;
     },
 
     _generateTreeTitleText: function (treeRootData) {
       return treeRootData.webpackageId + '/' + treeRootData.artifactId
     },
 
-    _addCollapseBodyToTreePanel: function (treePanel, treeIndex) {
-    return treePanel.append('div')
-        .style('width', this.getWidth())
+    _generateCollapseBodyForTreePanel: function (treePanel, treeIndex) {
+      var collapseBody = d3.select(document.createElement('div'))
+      collapseBody.style('width', this.getWidth())
         .style('height', this.getHeight())
         .attr('id', this._generateTreeId(treeIndex))
         .attr('class', this._addScopeToClassName('panel-collapse collapse svgContainer'))
-        .append('div')
+        .append('div');
+      return collapseBody;
     },
 
     _createSvgForTree: function (containerPanel) {
@@ -184,19 +185,19 @@
     _setCollapseShownListener: function (treeIndex, svgContainer, gElement) {
       var self = this;
       var panelId = this._generateTreeId(treeIndex);
-      $('#' + panelId).on('shown.bs.collapse', function () {
+      $(this).find('#' + panelId).on('shown.bs.collapse', function () {
         if (self._isValidScale(self.getScale()) && self.getScale() !== 'none') {
           self._scaleAndCenterTree(svgContainer, gElement, self.getScale());
         } else {
           self._scaleAndCenterTree(svgContainer, gElement, 'auto');
         }
-        $('#' + panelId).off('shown.bs.collapse')
+        $(this).find('#' + panelId).off('shown.bs.collapse')
       });
     },
 
     _handleToggleCollapseIcons: function () {
       // Toggle plus minus icon on show hide of collapse element
-      $('.collapse').on('show.bs.collapse', function(){
+      $(this).find('.collapse').on('show.bs.collapse', function(){
         $(this).parent().find(".glyphicon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
       }).on('hide.bs.collapse', function(){
         $(this).parent().find(".glyphicon").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
@@ -213,9 +214,12 @@
       var treeLayout = this._generateTreeLayout();
       var self = this;
       var treePanel = this._createTreePanel();
-      this._addHeadingToTreePanel(treePanel, treeRoot.data, treeIndex);
-      var bodyPanel = this._addCollapseBodyToTreePanel(treePanel, treeIndex);
-      var svg = this._createSvgForTree(bodyPanel);
+      var bodyPanel = this._generateCollapseBodyForTreePanel(treePanel, treeIndex);
+      var panelHeading = this._generateHeadingForTreePanel(bodyPanel, treeRoot.data);
+      treePanel.node().appendChild(panelHeading.node());
+      treePanel.node().appendChild(bodyPanel.node());
+      $(bodyPanel.node()).collapse('hide');
+      var svg = this._createSvgForTree(bodyPanel);  
       var g = svg.append('g');
       var nodes = treeLayout.nodes(treeRoot);
       this._addLinksToTree(treeLayout, nodes, g);
